@@ -32,7 +32,7 @@ async function main() {
 
   core.addPath(bin);
 
-  await exec("ossutil", [
+  await exec(/^win/.test(process.platform) ? "ossutil.cmd" : "ossutil", [
     "config",
     "-e",
     ENDPOINT,
