@@ -18,8 +18,8 @@ async function main() {
     core.info(`downloading from ${url}`);
     if (process.platform === 'win32') {
       const zipPath = await toolCache.downloadTool(url + '.zip');
-      const toolPath = await toolCache.extractZip(zipPath, path.dirname(zipPath));
-      toolPath = path.join(toolPath, 'ossutil64', 'ossutil64.exe')
+      toolPath = await toolCache.extractZip(zipPath, path.dirname(zipPath));
+      toolPath = path.join(toolPath, 'ossutil64', 'ossutil64.exe');
     } else {
       toolPath = await toolCache.downloadTool(url);
     }
