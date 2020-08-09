@@ -1,0 +1,24 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@master
+    - uses: ffdfgdfg/setup-ossutil@master
+      with:
+        endpoint: "oss.aliyuncs.com"
+        access-key-id: "your_key_id"
+        access-key-secret: "your_key_secret"
+    - run: ossutil cp -rf index.js oss://bucket/path
