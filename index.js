@@ -16,7 +16,13 @@ async function main() {
 
   if (!toolPath) {
     core.info(`downloading from ${url}`);
-    toolPath = await toolCache.downloadTool(url);
+    if (process.platform === 'win32') {
+      const zipPath = await toolCache.downloadTool(url + 'zip');
+      const toolPath = await tc.extractZip(zipPath, path.dirname(zipPath));
+      toolPath = path.join(toolPath, 'ossutil64', 'ossutil64.exe')
+    } else {
+      toolPath = await toolCache.downloadTool(url);
+    }
     core.info(`downloaded to ${toolPath}`);
   }
 
@@ -27,12 +33,12 @@ async function main() {
     });
   }
 
-  fs.copyFileSync(toolPath, path.join(bin, "ossutil"));
-  fs.chmodSync(path.join(bin, "ossutil"), 0o755);
+  fs.copyFileSync(toolPath, path.join(bin, /^win/.test(process.platform) ? "ossutil.exe" : "ossutil"));
+  fs.chmodSync(path.join(bin, /^win/.test(process.platform) ? "ossutil.exe" : "ossutil"), 0o755);
 
   core.addPath(bin);
 
-  await exec(/^win/.test(process.platform) ? "ossutil.cmd" : "ossutil", [
+  await exec(/^win/.test(process.platform) ? "ossutil.exe" : "ossutil", [
     "config",
     "-e",
     ENDPOINT,
